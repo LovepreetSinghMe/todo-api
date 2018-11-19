@@ -8,7 +8,7 @@ MongoClient.connect('mongodb://localhost:27017', { useNewUrlParser: true }, (err
 
     const db = client.db('TodoApp');
     
-    // returns a cursor. sort of pointer to the values. To array return a promise.
+    // returns a cursor. sort of pointer to the values. toArray returns a promise.
     db.collection('Todos').find({
         _id: new ObjectID('5bf2ded132caaecbc0afe05b')
     }).toArray().then((docs) => {
