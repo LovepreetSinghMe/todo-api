@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha server/**/*.test.js"
   },
   "keywords": [],
   "author": "",
@@ -14,5 +14,10 @@
     "express": "^4.16.4",
     "mongodb": "^3.1.10",
     "mongoose": "^5.3.12"
+  },
+  "devDependencies": {
+    "expect": "^23.6.0",
+    "mocha": "^5.2.0",
+    "supertest": "^3.3.0"
   }
 }
