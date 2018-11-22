@@ -17,15 +17,15 @@ app.post('/todos', (req, res) => {
 
     todo.save().then((doc) => {
         res.send(doc);
-    }, (error) => {
-        res.status(400).send(error);
+    }).catch((e) => {
+        res.status(400).send(e);
     });
 });
 
 app.get('/todos', (req, res) => {
     Todo.find().then((todos) => {
         res.send({todos});
-    }, (e) => {
+    }).catch((e) => {
         res.status(400).send(e);
     });
 });
@@ -39,18 +39,36 @@ app.get('/todos/:id', (req, res) => {
 
     Todo.findById(id).then((todo) => {
         if(!todo) {
-            return res.status(404).send();
+            return res.status(404).send({});
         }
 
         res.send({todo});
     }).catch((e) => {
-        res.status(400).send();
+        res.status(400).send({e});
     });
     
 });
 
-app.listen(3000, () => {
-    console.log('server listening on port 3000');
+app.delete('/todos/:id', (req, res) => {
+    let id = req.params.id;
+
+    if(!ObjectID.isValid(id)) {
+        return res.status(404).send();
+    }
+
+    Todo.findByIdAndRemove(id).then((todo) => {
+        if(!todo) {
+            return res.status(404).send({});
+        }
+
+        res.send({todo});
+    }).catch((e) => {
+        res.status(400).send({e});
+    });
+});
+
+app.listen(80, () => {
+    console.log('server listening on port 80');
 });
 
 module.exports = {app};
