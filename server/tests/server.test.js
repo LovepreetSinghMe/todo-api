@@ -125,7 +125,7 @@ describe('DELETE /todos/:id', () => {
                 }
 
                 Todo.findById(id).then((todo) => {
-                    expect(todo).toNotExist();
+                    expect(todo).toBeFalsy();
                     done();
                 }).catch((e) => {
                     done(e);
@@ -149,4 +149,34 @@ describe('DELETE /todos/:id', () => {
             .end(done);
     });
 
+});
+
+describe('PATCH /todos/:id', () => {
+    it('should update a todo with recieved values when id is valid', (done) => {
+        let id = todos[1]._id.toHexString();
+        let body = {
+            completed: true
+        };
+
+        request(app)
+            .patch(`/todos/${id}`)
+            .send(body)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.todo.completed).toBe(true);
+                expect(res.body.todo.completedAt).not.toBe(null);
+            })
+            .end((err, res) => {
+                if(err) {
+                    return done(err);
+                }
+
+                Todo.findById(id).then((todo) => {
+                    expect(res.body.todo.completedAt).toBe(todo.completedAt);
+                    done();
+                }).catch((e) => {
+                    done(e);
+                });
+            });
+    });
 });
