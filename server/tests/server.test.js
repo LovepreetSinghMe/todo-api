@@ -19,6 +19,7 @@ describe('POST /todos', () => {
 
         request(app)
             .post('/todos')
+            .set('x-auth', users[0].tokens[0].token)
             .send({text})
             .expect(200)
             .expect((res) => {
@@ -41,6 +42,7 @@ describe('POST /todos', () => {
     it('should not add an invalid todo', (done) => {
         request(app)
             .post('/todos')
+            .set('x-auth', users[0].tokens[0].token)
             .send({})
             .expect(400)
             .end((err, res) => {
@@ -62,9 +64,10 @@ describe('GET /todos', () => {
 
         request(app)
         .get('/todos')
+        .set('x-auth', users[0].tokens[0].token)
         .expect(200)
         .expect((res) => {
-            expect(res.body.todos.length).toBe(2);
+            expect(res.body.todos.length).toBe(1);
         })
         .end(done);
 
@@ -78,6 +81,7 @@ describe('GET /todos:id', () => {
 
         request(app)
             .get(`/todos/${todos[0]._id.toHexString()}`)
+            .set('x-auth', users[0].tokens[0].token)
             .expect(200)
             .expect((res) => {
                 expect(res.body.todo.text).toBe(todos[0].text);
@@ -89,6 +93,7 @@ describe('GET /todos:id', () => {
 
         request(app)
             .get(`/todos/${new ObjectID().toHexString()}`)
+            .set('x-auth', users[0].tokens[0].token)
             .expect(404)
             .end(done);
     });
@@ -97,6 +102,7 @@ describe('GET /todos:id', () => {
 
         request(app)
             .get('/todos/123abc')
+            .set('x-auth', users[0].tokens[0].token)
             .expect(404)
             .end(done);
     });
@@ -109,6 +115,7 @@ describe('DELETE /todos/:id', () => {
 
         request(app)
             .delete(`/todos/${id}`)
+            .set('x-auth', users[1].tokens[0].token)
             .expect(200)
             .expect((res) => {
                 expect(res.body.todo._id).toBe(id);
@@ -131,6 +138,7 @@ describe('DELETE /todos/:id', () => {
 
         request(app)
             .delete(`/todos/${new ObjectID().toHexString()}`)
+            .set('x-auth', users[0].tokens[0].token)
             .expect(404)
             .end(done);
     });
@@ -139,6 +147,7 @@ describe('DELETE /todos/:id', () => {
 
         request(app)
             .delete('/todos/123abc')
+            .set('x-auth', users[0].tokens[0].token)
             .expect(404)
             .end(done);
     });
@@ -154,6 +163,7 @@ describe('PATCH /todos/:id', () => {
 
         request(app)
             .patch(`/todos/${id}`)
+            .set('x-auth', users[1].tokens[0].token)
             .send(body)
             .expect(200)
             .expect((res) => {
