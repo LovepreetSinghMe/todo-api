@@ -254,3 +254,31 @@ describe('POST /users', () => {
 
     });
 });
+
+describe('POST /users/login', () => {
+
+    it('should generate a token when email and password match in database', (done) => {
+
+        request(app)
+            .post('/users/login')
+            .send(users[1])
+            .expect(200)
+            .expect((res) => {
+                expect(res.body._id).toBe(users[1]._id.toHexString());
+                expect(res.headers['x-auth']).toBeTruthy();
+            })
+            .end(done);
+    });
+
+    it('should reject invalid login', (done) => {
+
+        request(app)
+            .post('/users/login')
+            .send({email: users[1].email, password: 'esnsnss'})
+            .expect(400)
+            .expect((res) => {
+                expect(res.headers['x-auth']).toBeFalsy();
+            })
+            .end(done);
+    });
+});
